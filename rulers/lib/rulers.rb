@@ -1,6 +1,8 @@
 require "rulers/routing"
 require "rulers/version"
-require "rulers/array"
+require "rulers/util"
+require "rulers/dependencies"
+require "rulers/controller"
 
 module Rulers
   class Application
@@ -9,7 +11,9 @@ module Rulers
         return [404,
           {'Content-Type' => 'text/html'}, []]
       end
-
+      if env['PATH_INFO'] == '/'
+        return [404, {'Content-Type' => 'text/plain'}, ["No home page yet"]]
+      end
       klass, act = get_controller_and_action(env)
       controller = klass.new(env)
       begin
@@ -25,13 +29,6 @@ module Rulers
       end
       [200, {'Content-Type' => 'text/html'},
         [text]]
-    end
-  end
-
-  class Controller
-    attr_reader :env
-    def initialize(env)
-      @env = env
     end
   end
 end
