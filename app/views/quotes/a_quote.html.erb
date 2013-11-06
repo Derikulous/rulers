@@ -1,9 +1,11 @@
 <p>
-  There is nothing either good or bad but
-    <%= noun %> makes it so.
+  There is nothing either good or bad <%= @verb %> but
+    <%= @noun %> makes it so.
 </p>
 
 <p>
-  Ruby version <%= RUBY_VERSION %>
+  Located at <%= env["PATH_INFO"] %>
 </p>
+<p>
+  Ruby version <%= RUBY_VERSION %>
 

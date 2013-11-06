@@ -4,6 +4,8 @@ class QuotesController < Rulers::Controller
   end
 
   def a_quote
-    render :a_quote, :noun => :winking
+    @verb = "run"
+    @noun = "kangie"
+    render :a_quote
   end
 end

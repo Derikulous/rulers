@@ -1,20 +1,29 @@
 require_relative "test_helper"
 
-class TestApp < Rulers::Application
+class TestController < Rulers::Controller
+  def index
+    "Hello!"
+  end
 end
 
-class RulersAppTest < Test::Unit::TestCase
-  include Rack::Test::Methods
-
-  def app
-    TestApp.new
+class TestApp < Rulers::Application
+  def get_controller_and_action(env)
+    [TestController, "index"]
   end
 
-  def test_request
-    get "/"
+  class RulersAppTest < Test::Unit::TestCase
+    include Rack::Test::Methods
 
-    assert last_response.ok?
-    body = last_response.body
-    assert body["Hello"]
+    def app
+      TestApp.new
+    end
+
+    def test_request
+      get "/example/route"
+
+      assert last_response.ok?
+      body = last_response.body
+      assert body["Hello"]
+    end
   end
 end
