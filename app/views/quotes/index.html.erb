@@ -1,0 +1,8 @@
+ <% quotes.each do |q| %>
+ <p> <%= q["quote"] %> </p>
+ <% end %>
+
+ <div>
+   This is the user agent: <%= env["HTTP_USER_AGENT"] %>
+ </div>
+

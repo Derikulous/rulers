@@ -1,4 +1,19 @@
 class QuotesController < Rulers::Controller
+  def new_quote
+    attrs = {
+      "submitter" => "web user",
+      "quote" => "A picture is worth a thousand pixels",
+      "attribution" => "Me"
+    }
+    m = FileModel.create attrs
+    render :quote, :obj => m
+  end
+
+  def update_quote
+    update_quote = Rulers::Model::FileModel.post(1)
+    render :quote, :obj => update_quote
+  end
+
   def exception
     raise "Trouble maker!"
   end
@@ -7,5 +22,15 @@ class QuotesController < Rulers::Controller
     @verb = "run"
     @noun = "kangie"
     render :a_quote
+  end
+
+  def index
+    quotes = FileModel.all
+    render :index, :quotes => quotes
+  end
+
+  def quote_1
+    quote_1 = Rulers::Model::FileModel.find(1)
+    render :quote, :obj => quote_1
   end
 end

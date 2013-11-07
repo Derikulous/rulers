@@ -1,8 +1,14 @@
 require "multi_json"
 module Rulers
   module Model
-    def initialize(filename)
-      @filename = filename
+    class FileModel
+      def self.all
+        files = Dir["db/quotes/*.json"]
+        files.map { |f| FileModel.new f }
+      end
+
+      def initialize(filename)
+        @filename = filename
 
         # If filename is "dir/37.json", @id is 37
         basename = File.split(filename)[-1]
@@ -28,36 +34,38 @@ module Rulers
         end
       end
 
-      class FileModel
-        def self.all
-          files = Dir["db/quotes/*.json"]
-          files.map { |f| FileModel.new f }
-        end
-      end
-
       def self.create(attrs)
         hash = {}
         hash["submitter"] = attrs["submitter"] || ""
         hash["quote"] = attrs["quote"] || ""
         hash["attribution"] = attrs["attribution"] || ""
 
-        files = Dir["db/quotes/*.json"]
+        files = Dir["db/quotes/*json"]
         names = files.map { |f| f.split("/")[-1] }
         highest = names.map { |b| b[0...-5].to_i }.max
         id = highest + 1
 
         File.open("db/quotes/#{id}.json", "w") do |f|
-          f.write <<TEMPLATE
+f.write <<TEMPLATE
 {
   "submitter": "#{hash["submitter"]}",
   "quote": "#{hash["quote"]}",
-  "attribution": "#{hash["attribution"]}"
+  "attribution": "#{hash["attri"]}"
 }
 TEMPLATE
         end
 
         FileModel.new "db/quotes/#{id}.json"
       end
+
+      def self.save(attrs={"submitter"=>"Derik"})
+        save_file_model = FileModel.find(1) #no access to params
+        save_file_model.hash.merge!(attrs)
+        json_data = MultiJson.dump(save_file_model.hash)
+        File.open("db/quotes/1.json", "w") do |f|
+          f.write json_data
+        end
+      end
     end
   end
-
+end
