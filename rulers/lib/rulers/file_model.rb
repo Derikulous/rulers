@@ -46,7 +46,7 @@ module Rulers
         id = highest + 1
 
         File.open("db/quotes/#{id}.json", "w") do |f|
-f.write <<TEMPLATE
+          f.write <<TEMPLATE
 {
   "submitter": "#{hash["submitter"]}",
   "quote": "#{hash["quote"]}",
@@ -56,6 +56,24 @@ TEMPLATE
         end
 
         FileModel.new "db/quotes/#{id}.json"
+      end
+
+      def self.update(attrs)
+      return false if self.find(attrs["id"]).nil?
+      if ENV["REQUEST_METHOD"] == "POST"
+        hash = {}
+        hash["submitter"] = attrs["submitter"] || ""
+        hash["quote"] = attrs["quote"] || ""
+        hash["attribution"] = attrs["attribution"] || ""
+        File.open("db/quotes/#{id}.json", "w") do |f|
+          f.write <<TEMPLATE
+{
+  "submitter": "#{hash["submitter"]}",
+  "quote": "#{hash["quote"]}",
+  "attribution": "#{hash["attri"]}"
+}
+TEMPLATE
+        end
       end
 
       def self.save(attrs={"submitter"=>"Derik"})
