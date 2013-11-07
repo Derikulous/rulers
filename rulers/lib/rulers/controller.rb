@@ -5,6 +5,20 @@ module Rulers
   class Controller
     include Rulers::Model
     attr_reader :env
+    def response(text, status = 200, headers = {})
+      raise "Already responded!" if @response
+      a = [text].flatten
+      @response = Rack::Response.new(a, status, headers)
+    end
+
+    def get_response #for Rulers
+      @response
+    end
+
+    def render_response(*args)
+      response(render(*args))
+    end
+
     def initialize(env)
       @env = env
     end
