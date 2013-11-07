@@ -1,5 +1,6 @@
 require "erubis"
 require "rulers/file_model"
+require "rack/request"
 module Rulers
   class Controller
     include Rulers::Model
@@ -23,6 +24,14 @@ module Rulers
         eruby.instance_variable_set(var, instance_variable_get(var))
       end
       eruby.result locals.merge(:env => env)
+    end
+
+    def request
+      @request ||= Rack::Request.new(@env)
+    end
+
+    def params
+      request.params
     end
   end
 end
