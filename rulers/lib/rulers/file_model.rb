@@ -82,8 +82,9 @@ TEMPLATE
         json_data = MultiJson.dump(save_file_model.hash)
         File.open("db/quotes/1.json", "w") do |f|
           f.write json_data
-        end
       end
     end
   end
+end
+end
 end
