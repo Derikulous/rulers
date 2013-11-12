@@ -31,6 +31,19 @@ SQL
 
       def initialize(data = nil)
         @hash = data
+        @hash.each do |attr, value|
+          self.class.send(:define_method, attr) do #send circumvents the private method
+            value
+          end
+        end
+      end
+
+      def method_missing(column_name)
+        STDERR.puts "in search of a method called #{column_name}"
+        self.class.send(:define_method, column_name) do
+          @hash[column_name.to_s]
+        end
+        send column_name
       end
 
       def self.find(id) # query columns on an object
@@ -64,7 +77,7 @@ SQL
       def self.create(values)
         values.delete "id" # id is INTEGER PRIMARY KEY field, auto increments to unused ID
         keys = schema.keys - ["id"]
-        vals = keys.map do |key|
+        vals = keys.map do |key| #map is method on anything inumerable (countable things)
           values[key] ? to_sql(values[key]) :
             "null"
         end
